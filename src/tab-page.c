@@ -642,6 +642,8 @@ static gboolean update_scroll(gpointer data)
     return FALSE;
 }
 
+extern FmPath *g_on_go_up_stored_current_dir;
+
 static void on_folder_finish_loading(FmFolder* folder, FmTabPage* page)
 {
     FmFolderView* fv = page->folder_view;
@@ -688,6 +690,14 @@ static void on_folder_finish_loading(FmFolder* folder, FmTabPage* page)
     _tab_unset_busy_cursor(page);
     /* g_debug("finish-loading"); */
     g_signal_emit(page, signals[LOADED], 0);
+
+    // if we have anything stored from on_go_up, use it and clear the var
+    if (g_on_go_up_stored_current_dir) {
+        fm_folder_view_select_file_path(fv, g_on_go_up_stored_current_dir);
+        fm_folder_view_scroll_to_path(fv, g_on_go_up_stored_current_dir, TRUE);
+        fm_path_unref(g_on_go_up_stored_current_dir);
+        g_on_go_up_stored_current_dir = 0;
+    }
 }
 
 static void on_folder_unmount(FmFolder* folder, FmTabPage* page)

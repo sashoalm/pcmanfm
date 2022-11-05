@@ -1539,8 +1539,12 @@ static void on_go_forward(GtkAction* act, FmMainWin* win)
     _update_hist_buttons(win);
 }
 
+FmPath *g_on_go_up_stored_current_dir = 0;
+
 static void on_go_up(GtkAction* act, FmMainWin* win)
 {
+    g_on_go_up_stored_current_dir = fm_tab_page_get_cwd(win->current_page);
+    fm_path_ref(g_on_go_up_stored_current_dir);
     FmPath* parent = fm_path_get_parent(fm_tab_page_get_cwd(win->current_page));
     if(parent)
         fm_main_win_chdir( win, parent);
