@@ -2527,6 +2527,8 @@ static gboolean on_key_press_event(GtkWidget* w, GdkEventKey* evt)
             return TRUE;
         }
     }
+
+    g_object_set_data(GTK_WIDGET(win), "MyFmFolderModel", fm_folder_view_get_model(win->current_page->folder_view));
     return GTK_WIDGET_CLASS(fm_main_win_parent_class)->key_press_event(w, evt);
 }
 
